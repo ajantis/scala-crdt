@@ -28,7 +28,7 @@ import java.util.UUID
 
 import io.dmitryivanov.crdt.sets.OURSet.ElementState
 
-class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set[ElementState[E]]()) {
+class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set[ElementState[E]]()) extends CrdtSet[E, OURSet[E]] {
 
   def add(state: ElementState[E]): OURSet[E] = {
     val update = new OURSet[E](Set(state.copy(removed = false)))

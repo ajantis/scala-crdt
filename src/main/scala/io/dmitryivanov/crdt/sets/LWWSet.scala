@@ -27,7 +27,7 @@ package io.dmitryivanov.crdt.sets
 import io.dmitryivanov.crdt.sets.LWWSet._
 
 class LWWSet[E](protected val addSet: GSet[ElementState[E]] = new GSet[ElementState[E]](),
-                protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) {
+                protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) extends CrdtSet[E, LWWSet[E]] {
 
   type State = ElementState[E]
 

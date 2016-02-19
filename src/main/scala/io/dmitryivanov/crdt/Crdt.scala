@@ -22,20 +22,13 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt.sets
+package io.dmitryivanov.crdt
 
-class TwoPSet[E](protected val addSet: GSet[E] = new GSet[E](),
-                 protected val removeSet: GSet[E] = new GSet[E]()) extends CrdtSet[E, TwoPSet[E]] {
+trait Crdt[E, TotalValue, DataType <: Crdt[E, TotalValue, DataType]] {
 
-  def add(element: E): TwoPSet[E] = new TwoPSet[E](addSet.add(element), removeSet)
+  def merge(anotherCrdt: DataType): DataType
 
-  def remove(element: E): TwoPSet[E] = new TwoPSet[E](addSet, removeSet.add(element))
+  def diff(anotherCrdt: DataType): DataType
 
-  def merge(anotherSet: TwoPSet[E]): TwoPSet[E] =
-    new TwoPSet[E](addSet.merge(anotherSet.addSet), removeSet.merge(anotherSet.removeSet))
-
-  def diff(anotherSet: TwoPSet[E]): TwoPSet[E] =
-    new TwoPSet[E](addSet.diff(anotherSet.addSet), removeSet.diff(anotherSet.removeSet))
-
-  def lookup: Set[E] = addSet.diff(removeSet).lookup
+  def lookup: TotalValue
 }

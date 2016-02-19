@@ -26,6 +26,9 @@ package io.dmitryivanov.crdt.sets
 
 /**
   * Grow-Only set. Immutable Set that allows only addition operations.
+  * GSet is only a thin wrapper around normal Set forbidding remove operation.
+  *
+  * As Set union operation is commutative and convergent it's safe to use it here as long as it only grows.
   *
   * @param set an underlying set structure that carries elements
   *

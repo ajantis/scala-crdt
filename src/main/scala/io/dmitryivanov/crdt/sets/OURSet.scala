@@ -55,7 +55,8 @@ class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set
 
 object OURSet {
 
-  case class ElementState[E <: Ordered[E]](id: UUID, timestamp: Long, value: E, removed: Boolean = false) extends Ordered[ElementState[E]] {
+  case class ElementState[E <: Ordered[E]](id: UUID, timestamp: Long,
+                                           value: E, removed: Boolean = false) extends Ordered[ElementState[E]] {
 
     type TupleType = (String, Long, Boolean, E)
 

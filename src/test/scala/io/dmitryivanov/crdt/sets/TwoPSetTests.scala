@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
 import org.specs2.mutable._
 

@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
 import java.util.UUID
 
 import OURSet.ElementState
-
 import org.specs2.mutable.Specification
 
 class OURSetTests extends Specification {
@@ -89,5 +88,21 @@ class OURSetTests extends Specification {
 
       result.lookup.map(_.s) must contain("cat", "ape")
     }
+
+    /*
+//    "compute a diff against another LWWSet correctly" in {
+//      val firstOrSet = new ORSet[String]()
+//        .add(ElementState("#a", "cat")).add(ElementState("#b", "dog")).remove(ElementState("#a", "cat"))
+//
+//      val secondOrSet = new ORSet[String]()
+//        .add(ElementState("#c", "cat")).add(ElementState("#d", "ape")).remove(ElementState("#a", "cat"))
+//
+//      val result = firstOrSet diff secondOrSet
+//
+//      result.lookup.size must beEqualTo(2)
+//
+//      result.lookup must contain("tiger", "ape")
+//    }
+ */
   }
 }

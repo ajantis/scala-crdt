@@ -22,32 +22,37 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
-import ORSet.ElementState
+import io.dmitryivanov.crdt.sets.LWWSet._
 
-class ORSet[E](protected val addSet: GSet[ElementState[E]] = new GSet[ElementState[E]](),
-               protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) {
+class LWWSet[E](protected val addSet: GSet[ElementState[E]] = new GSet[ElementState[E]](),
+                protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) {
 
   type State = ElementState[E]
 
-  def add(state: State): ORSet[E] = new ORSet[E](addSet.add(state), removeSet)
+  // TODO optimize: reduce stale states with lower timestamps
+  def add(state: State): LWWSet[E] = new LWWSet[E](addSet.add(state), removeSet)
 
-  def remove(state: State): ORSet[E] = new ORSet[E](addSet, removeSet.add(state))
+  def remove(state: State): LWWSet[E] = new LWWSet[E](addSet, removeSet.add(state))
 
-  def merge(anotherSet: ORSet[E]): ORSet[E] =
-    new ORSet[E](addSet.merge(anotherSet.addSet), removeSet.merge(anotherSet.removeSet))
+  def merge(anotherSet: LWWSet[E]): LWWSet[E] =
+    new LWWSet[E](addSet.merge(anotherSet.addSet), removeSet.merge(anotherSet.removeSet))
 
-  def diff(anotherSet: ORSet[E]): ORSet[E] =
-    new ORSet[E](addSet.diff(anotherSet.addSet), removeSet.diff(anotherSet.removeSet))
+  // TODO optimize: drop elements from the left handside with lower timestamp
+  def diff(anotherSet: LWWSet[E]): LWWSet[E] =
+    new LWWSet[E](addSet.diff(anotherSet.addSet), removeSet.diff(anotherSet.removeSet))
 
   def lookup: Set[E] = addSet.lookup.filter { addElem =>
     !removeSet.lookup.exists { removeElem =>
-      removeElem.value == addElem.value && removeElem.tag == addElem.tag
+      removeElem.value == addElem.value && removeElem.timestamp > addElem.timestamp
     }
   }.map(_.value)
 }
 
-object ORSet {
-  case class ElementState[E](tag: String, value: E)
+object LWWSet {
+
+  case class ElementState[E](timestamp: Long, value: E)
 }
+
+

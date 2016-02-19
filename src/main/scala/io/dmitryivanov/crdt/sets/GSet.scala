@@ -22,43 +22,44 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
-import org.specs2.mutable._
+/**
+  * Grow-Only set. Immutable Set that allows only addition operations.
+  *
+  * @param set an underlying set structure that carries elements
+  *
+  * @tparam E a type of the elements stored in this Set.
+  */
+class GSet[E](set: Set[E] = Set[E]()) {
 
-class GSetTests extends Specification {
+  /**
+    * Adds an element to the GSet.
+    *
+    * @param e an element to add
+    * @return an updated GSet collection.
+    */
+  def add(e: E): GSet[E] = new GSet[E](set + e)
 
-  "GSet" should {
-    "compute lookup based on all added values" in {
-      val gSet = new GSet[String]()
+  /**
+    * Merges current GSet data with another GSet. Produces a merge result in the form of a new GSet.
+    *
+    * @param other a GSet to merge current set with.
+    *
+    * @return a new GSet containing a result of merge operation between two GSets.
+    */
+  def merge(other: GSet[E]): GSet[E] = new GSet[E](other.lookup ++ lookup)
 
-      val result = gSet.add("ape").add("dog").add("cat").lookup
+  /**
+    *
+    * @param other a GSet to calculate the difference against.
+    *
+    * @return a new GSet containing a result of diff operation on two GSets.
+    */
+  def diff(other: GSet[E]): GSet[E] = new GSet[E](set.diff(other.lookup))
 
-      result.size must beEqualTo(3)
-
-      result must contain("ape", "dog", "cat")
-    }
-
-    "merge with another GSet correctly" in {
-      val firstGSet = new GSet[String]().add("ape").add("dog").add("tiger")
-      val secondGSet = new GSet[String]().add("cat")
-
-      val result = firstGSet merge secondGSet
-
-      result.lookup.size must beEqualTo(4)
-
-      result.lookup must contain("ape", "dog", "cat", "tiger")
-    }
-
-    "compute a diff against another GSet correctly" in {
-      val firstGSet = new GSet[String]().add("ape").add("dog").add("tiger")
-      val secondGSet = new GSet[String]().add("dog")
-
-      val result = firstGSet diff secondGSet
-
-      result.lookup.size must beEqualTo(2)
-
-      result.lookup must contain("ape", "tiger")
-    }
-  }
+  /**
+    * @return a total value: a set of all elements stored in GSet.
+    */
+  def lookup: Set[E] = set
 }

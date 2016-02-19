@@ -22,18 +22,17 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
-import org.specs2.mutable.Specification
+import LWWSet.ElementState
+import org.specs2.mutable._
 
-import ORSet.ElementState
-
-class ORSetTests extends Specification {
-  "ORSet" should {
+class LWWSetTests extends Specification {
+  "LWWSet" should {
     "compute lookup based on all added values" in {
-      val orSet = new ORSet[String]()
+      val lwwSet = new LWWSet[String]()
 
-      val result = orSet.add(ElementState("#a", "ape")).add(ElementState("#b", "dog")).add(ElementState("#c", "cat")).lookup
+      val result = lwwSet.add(ElementState(1, "ape")).add(ElementState(1, "dog")).add(ElementState(1, "cat")).lookup
 
       result.size must beEqualTo(3)
 
@@ -41,25 +40,25 @@ class ORSetTests extends Specification {
     }
 
     "compute lookup based on all added and removed values" in {
-      val orSet = new ORSet[String]()
+      val lwwSet = new LWWSet[String]()
 
-      val result = orSet.add(ElementState[String]("#a", "ape"))
-        .add(ElementState("#b", "dog")).remove(ElementState("#a", "ape"))
-        .remove(ElementState("#b", "dog")).add(ElementState("#e", "cat")).lookup
+      val result = lwwSet.add(ElementState[String](2, "ape"))
+        .add(ElementState(1, "dog")).remove(ElementState(1, "ape"))
+        .remove(ElementState(2, "dog")).add(ElementState(1, "cat")).lookup
 
-      result.size must beEqualTo(1)
+      result.size must beEqualTo(2)
 
-      result must contain("cat")
+      result must contain("cat", "ape")
     }
 
-    "merge with another ORSet correctly" in {
-      val firstOrSet = new ORSet[String]()
-        .add(ElementState("#a", "cat")).add(ElementState("#b", "dog")).remove(ElementState("#a", "cat"))
+    "merge with another LWWSet correctly" in {
+      val firstLwwSet = new LWWSet[String]()
+        .add(ElementState(1, "cat")).add(ElementState(1, "dog")).remove(ElementState(3, "cat"))
 
-      val secondOrSet = new ORSet[String]()
-        .add(ElementState("#c", "cat")).add(ElementState("#d", "ape")).remove(ElementState("#a", "cat"))
+      val secondLwwSet = new LWWSet[String]()
+        .add(ElementState(5, "cat")).add(ElementState(1, "ape")).remove(ElementState(1, "cat"))
 
-      val result = firstOrSet merge secondOrSet
+      val result = firstLwwSet merge secondLwwSet
 
       result.lookup.size must beEqualTo(3)
 
@@ -67,17 +66,17 @@ class ORSetTests extends Specification {
     }
 
     "compute a diff against another LWWSet correctly" in {
-      val firstOrSet = new ORSet[String]()
-        .add(ElementState("#a", "cat")).add(ElementState("#b", "dog")).remove(ElementState("#a", "cat"))
+      val firstLwwSet = new LWWSet[String]()
+        .add(ElementState(1, "cat")).add(ElementState(1, "dog")).remove(ElementState(3, "cat"))
 
-      val secondOrSet = new ORSet[String]()
-        .add(ElementState("#c", "cat")).add(ElementState("#d", "ape")).remove(ElementState("#a", "cat"))
+      val secondLwwSet = new LWWSet[String]()
+        .add(ElementState(5, "cat")).add(ElementState(1, "ape")).remove(ElementState(1, "cat"))
 
-      val result = firstOrSet diff secondOrSet
+      val result = firstLwwSet diff secondLwwSet
 
-      result.lookup.size must beEqualTo(2)
+      result.lookup.size must beEqualTo(1)
 
-      result.lookup must contain("dog", "cat")
+      result.lookup must contain("dog")
     }
   }
 }

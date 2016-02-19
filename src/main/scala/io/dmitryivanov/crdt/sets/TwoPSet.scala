@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
 class TwoPSet[E](protected val addSet: GSet[E] = new GSet[E](),
                  protected val removeSet: GSet[E] = new GSet[E]()) {

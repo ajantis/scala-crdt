@@ -22,15 +22,43 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
-class GSet[E](set: Set[E] = Set[E]()) {
+import org.specs2.mutable._
 
-  def add(e: E): GSet[E] = new GSet[E](set + e)
+class GSetTests extends Specification {
 
-  def merge(other: GSet[E]): GSet[E] = new GSet[E](other.lookup ++ lookup)
+  "GSet" should {
+    "compute lookup based on all added values" in {
+      val gSet = new GSet[String]()
 
-  def diff(other: GSet[E]): GSet[E] = new GSet[E](set.diff(other.lookup))
+      val result = gSet.add("ape").add("dog").add("cat").lookup
 
-  def lookup: Set[E] = set
+      result.size must beEqualTo(3)
+
+      result must contain("ape", "dog", "cat")
+    }
+
+    "merge with another GSet correctly" in {
+      val firstGSet = new GSet[String]().add("ape").add("dog").add("tiger")
+      val secondGSet = new GSet[String]().add("cat")
+
+      val result = firstGSet merge secondGSet
+
+      result.lookup.size must beEqualTo(4)
+
+      result.lookup must contain("ape", "dog", "cat", "tiger")
+    }
+
+    "compute a diff against another GSet correctly" in {
+      val firstGSet = new GSet[String]().add("ape").add("dog").add("tiger")
+      val secondGSet = new GSet[String]().add("dog")
+
+      val result = firstGSet diff secondGSet
+
+      result.lookup.size must beEqualTo(2)
+
+      result.lookup must contain("ape", "tiger")
+    }
+  }
 }

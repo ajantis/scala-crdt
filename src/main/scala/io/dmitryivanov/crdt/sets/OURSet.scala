@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package io.dmitryivanov.crdt
+package io.dmitryivanov.crdt.sets
 
 import java.util.UUID
 
-import OURSet.ElementState
+import io.dmitryivanov.crdt.sets.OURSet.ElementState
 
 class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set[ElementState[E]]()) {
 

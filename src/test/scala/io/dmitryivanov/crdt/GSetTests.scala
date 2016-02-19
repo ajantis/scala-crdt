@@ -49,5 +49,16 @@ class GSetTests extends Specification {
 
       result.lookup must contain("ape", "dog", "cat", "tiger")
     }
+
+    "compute a diff against another GSet correctly" in {
+      val firstGSet = new GSet[String]().add("ape").add("dog").add("tiger")
+      val secondGSet = new GSet[String]().add("dog")
+
+      val result = firstGSet diff secondGSet
+
+      result.lookup.size must beEqualTo(2)
+
+      result.lookup must contain("ape", "tiger")
+    }
   }
 }

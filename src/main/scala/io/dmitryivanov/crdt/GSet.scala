@@ -28,7 +28,9 @@ class GSet[E](set: Set[E] = Set[String]()) {
 
   def add(e: E): GSet[E] = new GSet[E](set + e)
 
-  def lookup: Set[E] = set
-
   def merge(other: GSet[E]): GSet[E] = new GSet[E](other.lookup ++ lookup)
+
+  def diff(other: GSet[E]): GSet[E] = new GSet[E](set.diff(other.lookup))
+
+  def lookup: Set[E] = set
 }

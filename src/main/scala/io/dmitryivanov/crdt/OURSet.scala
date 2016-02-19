@@ -28,7 +28,7 @@ import java.util.UUID
 
 import OURSet.ElementState
 
-class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set()) {
+class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set[ElementState[E]]()) {
 
   def add(state: ElementState[E]): OURSet[E] = {
     val update = new OURSet[E](Set(state.copy(removed = false)))
@@ -55,11 +55,11 @@ class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set
 
 object OURSet {
 
+  implicit def valueOrdering[E <: Ordered[E]]: Ordering[E] = Ordering.fromLessThan[E]((e1, e2) => e1.compare(e2) <= 0)
+
   case class ElementState[E <: Ordered[E]](id: UUID, timestamp: Long, value: E, removed: Boolean = false) extends Ordered[ElementState[E]] {
 
     type TupleType = (String, Long, Boolean, E)
-
-    implicit val valueOrdering: Ordering[E] = Ordering.fromLessThan[E]((e1, e2) => e1.compare(e2) >= 0)
 
     override def compare(that: ElementState[E]): Int = {
       import scala.math.Ordering._

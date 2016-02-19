@@ -24,8 +24,8 @@
 
 package io.dmitryivanov.crdt
 
-class TwoPSet[E](protected val addSet: GSet[E] = new GSet(),
-                 protected val removeSet: GSet[E] = new GSet()) {
+class TwoPSet[E](protected val addSet: GSet[E] = new GSet[E](),
+                 protected val removeSet: GSet[E] = new GSet[E]()) {
 
   def add(element: E): TwoPSet[E] = new TwoPSet[E](addSet.add(element), removeSet)
 

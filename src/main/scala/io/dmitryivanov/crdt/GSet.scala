@@ -24,7 +24,7 @@
 
 package io.dmitryivanov.crdt
 
-class GSet[E](set: Set[E] = Set[String]()) {
+class GSet[E](set: Set[E] = Set[E]()) {
 
   def add(e: E): GSet[E] = new GSet[E](set + e)
 

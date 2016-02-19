@@ -28,7 +28,7 @@ import java.util.UUID
 
 import OURSet.ElementState
 
-class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]]) {
+class OURSet[E <: Ordered[E]](protected val elements: Set[ElementState[E]] = Set()) {
 
   def add(state: ElementState[E]): OURSet[E] = {
     val update = new OURSet[E](Set(state.copy(removed = false)))

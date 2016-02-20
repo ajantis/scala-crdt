@@ -24,11 +24,16 @@
 
 package io.dmitryivanov.crdt
 
-trait Crdt[E, TotalValue, DataType <: Crdt[E, TotalValue, DataType]] {
+trait Crdt[E, TotalValue] {
 
-  def merge(anotherCrdt: DataType): DataType
+  /**
+    * A concrete type of the CRDT implementing this trait.
+    */
+  type SelfType <: Crdt[E, TotalValue]
 
-  def diff(anotherCrdt: DataType): DataType
+  def merge(anotherCrdt: SelfType): SelfType
+
+  def diff(anotherCrdt: SelfType): SelfType
 
   def lookup: TotalValue
 }

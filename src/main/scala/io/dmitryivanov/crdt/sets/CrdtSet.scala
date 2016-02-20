@@ -25,4 +25,4 @@
 package io.dmitryivanov.crdt
 package sets
 
-trait CrdtSet[E, SetType <: CrdtSet[E, SetType]] extends Crdt[E, Set[E], SetType]
+trait CrdtSet[E] extends Crdt[E, Set[E]]

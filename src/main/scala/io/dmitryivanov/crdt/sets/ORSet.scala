@@ -27,7 +27,9 @@ package io.dmitryivanov.crdt.sets
 import io.dmitryivanov.crdt.sets.ORSet.ElementState
 
 class ORSet[E](protected val addSet: GSet[ElementState[E]] = new GSet[ElementState[E]](),
-               protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) extends CrdtSet[E, ORSet[E]] {
+               protected val removeSet: GSet[ElementState[E]] = new GSet[ElementState[E]]()) extends CrdtSet[E] {
+
+  type SelfType = ORSet[E]
 
   type State = ElementState[E]
 

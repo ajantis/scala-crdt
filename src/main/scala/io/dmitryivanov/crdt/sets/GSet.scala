@@ -34,7 +34,9 @@ package io.dmitryivanov.crdt.sets
   *
   * @tparam E a type of the elements stored in this Set.
   */
-class GSet[E](set: Set[E] = Set[E]()) extends CrdtSet[E, GSet[E]] {
+class GSet[E](set: Set[E] = Set[E]()) extends CrdtSet[E] {
+
+  type SelfType = GSet[E]
 
   /**
     * Adds an element to the GSet.
